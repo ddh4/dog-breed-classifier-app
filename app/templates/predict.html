@@ -1,0 +1,33 @@
+{% extends "master.html" %}
+{% block title %}Results{% endblock %}
+
+
+{% block content %}
+
+<div class="card-deck">
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="{{ url_for('send_file', filename=uploaded_image) }}" alt="Card image cap">
+      <div class="card-body">
+        <h5 class="card-title">{{prediction_greeting}}</h5>
+        <p class="card-text">{{prediction_message}}</p>
+      </div>
+    </div>
+
+
+    <div class="card" style="width: 18rem;">
+      <img class="card-img-top" src="{{ url_for('static', filename=breed_image) }}" alt="Card image">
+      <div class="card-body">
+        <p class="card-text"><strong>{{prediction_result}}</strong></p>
+      </div>
+    </div>
+
+
+      <div class="card" style="background-color: white; border-color: white; width: 18rem;">
+
+       </div>
+</div>
+
+
+
+
+{% endblock %}

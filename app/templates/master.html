@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Dog Breed Classifier</title>
+
+    <link rel="shortcut icon" href="{{ url_for('static',filename='favicon.ico') }}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" href="{{ url_for('static',filename='styles/custom.css') }}">
+
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="/">Capstone Project</a>
+        </div>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav">
+            <li class="nav-item active">
+              <a class="nav-link" href="https://www.udacity.com/">Made with Udacity</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="https://github.com/ddh4">Contact</a>
+            </li>
+          </ul>
+        </div>
+    </div>
+</nav>
+
+
+<div class="jumbotron jumbotron-fluid">
+    <div class="container">
+        <h1 class="display-4 text-center">Dog Breed Classifier</h1>
+        <p class="lead text-center">Upload your own image to identify a dog breed or see what dog breed you resemble!</p>
+
+        <form action="/predict" method="post" enctype="multipart/form-data">
+          <div class="input-group">
+            <div class="custom-file">
+              <input type="file" class="custom-file-input" name="uploaded_file" id="uploadedFile">
+              <label class="custom-file-label" for="uploadedFile">Choose file</label>
+            </div>
+            <div class="input-group-append">
+              <button id="upload_button" class="btn btn-secondary" type="submit" disabled>Upload Image</button>
+            </div>
+          </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="container">
+    {% block message %}
+    {% endblock %}
+
+    {% block content %}
+      <div class="card mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Project Overview</h5>
+          <p class="card-text"> Given an image of a dog, this application will identify an estimate of the canine’s breed.</p>
+          <p class="card-text"> If supplied an image of a human, this application will identify the resembling dog breed.</p>
+        </div>
+      </div>
+
+    <div class="card-deck">
+       <div class="card" style="width: 18rem;">
+         <img class="card-img-top" src="{{ url_for('static', filename='images/test_images/test_bulldog.jpg') }}" alt="Card image cap">
+         <div class="card-body">
+           <h5 class="card-title">Hello, Dog!</h5>
+           <p class="card-text">Your predicted breed is...</p>
+           <p class="card-text"><strong>Bulldog</strong></p>
+         </div>
+       </div>
+
+        <div class="card" style="width: 18rem;">
+          <img class="card-img-top" src="{{ url_for('static', filename='images/test_images/test_harold.jpg') }}" alt="Card image cap">
+          <div class="card-body">
+            <h5 class="card-title">Hello, Human!</h5>
+            <p class="card-text">Your predicted breed is...</p>
+            <p class="card-text"><strong>Silky terrier</strong></p>
+          </div>
+        </div>
+
+      <div class="card" style="width: 18rem;">
+        <img class="card-img-top" src="{{ url_for('static', filename='images/test_images/test_cat.jpg') }}" alt="Card image cap">
+        <div class="card-body">
+          <h5 class="card-title">Oops!</h5>
+          <p class="card-text">Please provide an image of a dog or of a human with a visible face.</p>
+        </div>
+      </div>
+    </div>
+
+    {% endblock %}
+</div>
+
+<script type="text/javascript">
+    $('input[type=file]').change(function(){
+      if($('input[type=file]').val()=='Choose file'){
+        $('#upload_button').attr('disabled', true)
+      }
+      else{
+        $('#upload_button').attr('disabled', false);
+      }
+    })
+
+    $('#uploadedFile').on('change',function(){
+        //get the file name
+        var fileName = $(this).val();
+        filename_components = fileName.split("\\")
+        $(this).next('.custom-file-label').html(filename_components[filename_components.length-1]);
+    })
+</script>
+
+</body>
+</html>
