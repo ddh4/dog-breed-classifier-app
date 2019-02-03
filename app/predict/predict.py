@@ -16,16 +16,12 @@ import keras; print(keras.__version__)
 
 
 def Resnet50_predict_breeds(img_path, model):
-
+    # load dog_names pickle
     with open('predict/models/dog_names.pickle', 'rb') as handle:
         dog_names = pickle.load(handle)
 
     # extract bottleneck features
     bottleneck_feature = extract_Resnet50(path_to_tensor(img_path))
-
-    #
-    #bottleneck_feature = np.expand_dims(bottleneck_feature, axis=0)
-
     # obtain predicted vector
     predicted_vector = model.predict(bottleneck_feature)
     # return dog breed that is predicted by the model
@@ -53,6 +49,7 @@ def ResNet50_predict_labels(img_path, model):
 
 
 def face_detector(img_path):
+    # detect face using cv2 and return number of faces
     face_cascade = cv2.CascadeClassifier('predict/models/haarcascade_frontalface_alt.xml')
     img = cv2.imread(img_path)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -61,28 +58,32 @@ def face_detector(img_path):
 
 
 def dog_detector(img_path):
-    # define ResNet50 model
+    # define ResNet50 model to check if a dog exists
     ResNet50_model = ResNet50(weights='imagenet')
     prediction = ResNet50_predict_labels(img_path, ResNet50_model)
     return ((prediction <= 268) & (prediction >= 151))
 
 
 def dog_breed_predictor(image_path):
-
+    # clear keras session to allow for multiple predictions
     backend.clear_session()
 
+    # load the model from our best weights, generated in the notebook
     model_checkpoint = 'predict/models/weights.best.Resnet50.hdf5'
     model = load_model(model_checkpoint)
 
+    # check for humans and dogs
     dog_detected = dog_detector(image_path)
     human_detected = face_detector(image_path)
-
+    # if a dog is detected in the image, return the predicted breed.
     if dog_detected:
         prediction = Resnet50_predict_breeds(image_path, model).split('.')[1].replace("_", " ")
         return "Hello, Dog!", "Your predicted breed is...", prediction
+    # if a human is detected in the image, return the resembling dog breed.
     elif human_detected:
         prediction = Resnet50_predict_breeds(image_path, model).split('.')[1].replace("_", " ")
         return "Hello, Human!", "Your predicted breed is...", prediction
+    # if neither is detected in the image, provide output that indicates an error.
     elif not dog_detected and not human_detected:
         prediction = None
         return "Oops!", " I could not find a dog or a human in the image.\nPlease provide an image of a dog or of a human with a visible face.", prediction
