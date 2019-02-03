@@ -48,6 +48,8 @@ Additionally, a flask application was built which provides an straight forward u
 
 ### File Descriptions
 
+The jupyter_notebook folder contains the jupyter notebooks used to explore and train our CNN model, as well as functions to detect dogs and faces. Datasets for training, test and validating the CNN models in the notebook are available [here](https://s3-us-west-1.amazonaws.com/udacity-aind/dog-project/dogImages.zip).
+
 The app folder contains the files neccessary to run the Flask application, loading using run.py which renders the html templates.
 
 The app/predict folder contains the files neccessary to perform predictions, such as loading the models from memory, detecting dogs, humans and outputing breeds.
